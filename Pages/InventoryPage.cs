@@ -24,8 +24,26 @@ public class InventoryPage
 
     public void AddItemToCart(string itemName)
     {
-        var item = InventoryItems.First(i => i.Text.Contains(itemName));
-        item.FindElement(By.TagName("button")).Click();
+        var previousCount = GetCartCount();
+
+        // Find the inventory item by its displayed name to avoid text-matching the whole item block.
+        var item = InventoryItems.First(i => i.FindElement(By.ClassName("inventory_item_name")).Text.Contains(itemName));
+        var button = item.FindElement(By.TagName("button"));
+        button.Click();
+
+        // Wait until the cart badge increments to reflect the added item. Increase timeout to reduce flakiness.
+        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        wait.Until(d =>
+        {
+            try
+            {
+                return GetCartCount() > previousCount;
+            }
+            catch
+            {
+                return false;
+            }
+        });
     }
 
     public int GetCartCount()

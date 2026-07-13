@@ -18,13 +18,17 @@ public class CartTests
         _loginPage = new LoginPage(_driver);
         _inventoryPage = new InventoryPage(_driver);
         _loginPage.Goto();
-        _loginPage.Login("standard_user", "secret_sauce");
+        _loginPage.Login(Credentials.StandardUser, Credentials.Password);
     }
 
     [TearDown]
     public void TearDown()
     {
-        _driver.Quit();
+        if (_driver != null)
+        {
+            try { _driver.Quit(); } catch { }
+            try { _driver.Dispose(); } catch { }
+        }
     }
 
     [Test]

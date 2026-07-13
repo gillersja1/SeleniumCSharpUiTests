@@ -24,13 +24,17 @@ public class LoginTests
     [TearDown]
     public void TearDown()
     {
-        _driver.Quit();
+        if (_driver != null)
+        {
+            try { _driver.Quit(); } catch { }
+            try { _driver.Dispose(); } catch { }
+        }
     }
 
     [Test]
     public void StandardUser_CanLogin_AndSeeInventory()
     {
-        _loginPage.Login("standard_user", "secret_sauce");
+        _loginPage.Login(Credentials.StandardUser, Credentials.Password);
 
         // Explicit wait for the post-login navigation, rather than assuming
         // the click has fully resolved by the next line.
@@ -43,7 +47,7 @@ public class LoginTests
     [Test]
     public void LockedOutUser_SeesErrorMessage()
     {
-        _loginPage.Login("locked_out_user", "secret_sauce");
+        _loginPage.Login("locked_out_user", Credentials.Password);
 
         Assert.That(_loginPage.GetErrorMessage(), Does.Contain("locked out"));
     }
