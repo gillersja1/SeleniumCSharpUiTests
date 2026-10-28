@@ -78,6 +78,18 @@ No browser install step is needed — GitHub-hosted `ubuntu-latest` runners
 ship with Chrome preinstalled, and Selenium Manager resolves a matching
 chromedriver automatically the first time a test runs.
 
+## Troubleshooting
+
+- **Clicks silently do nothing after login.** saucedemo's shared password
+  appears in public breach lists, so Chrome shows a "Change your password"
+  dialog. It's browser UI, so it doesn't appear in screenshots, but it
+  swallows real clicks and key presses. `DriverFactory` turns off Chrome's
+  password manager and leak detection so the dialog never appears.
+- **`session not created: This version of ChromeDriver only supports Chrome
+  version N`.** An old `chromedriver.exe` on your `PATH` takes priority over
+  Selenium Manager. Remove it from `PATH` (or delete it) and Selenium Manager
+  will download the matching driver automatically.
+
 ## Possible extensions
 
 - Add a `BaseTest` fixture to remove the repeated `SetUp`/`TearDown` between `LoginTests` and `CartTests`
